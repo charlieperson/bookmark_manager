@@ -1,6 +1,6 @@
 ENV['RACK_ENV'] ||= 'development'
 require 'sinatra/base'
-require './lib/link.rb'
+
 require_relative 'data_mapper_setup'
 
 class Bookmark < Sinatra::Base
@@ -15,6 +15,12 @@ class Bookmark < Sinatra::Base
 
   get '/add' do
     erb(:add)
+  end
+
+  get '/tags/:name' do
+    tag = Tag.first(tags: params[:name])
+    @links = tag ? tag.links : []
+    erb(:links)
   end
 
   post '/add' do

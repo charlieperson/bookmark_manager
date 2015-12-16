@@ -33,4 +33,26 @@ feature 'display a list of links' do
     link = Link.first
     expect(link.tags.map(&:tags)).to include('search')
   end
+
+
+  # As a time-pressed user
+  # So that I can quickly find links on a particular topic
+  # I would like to filter links by tag
+  scenario 'I can filter links by tag' do
+      Link.create(url: 'http://www.makersacademy.com', title: 'Makers Academy', tags: [Tag.first_or_create(tags: 'education')])
+      Link.create(url: 'http://www.google.com', title: 'Google', tags: [Tag.first_or_create(tags: 'search')])
+      Link.create(url: 'http://www.zombo.com', title: 'This is Zombocom', tags: [Tag.first_or_create(tags: 'bubbles')])
+      Link.create(url: 'http://www.bubble-bobble.com', title: 'Bubble Bobble', tags: [Tag.first_or_create(tags: 'bubbles')])
+
+
+
+    visit '/tags/bubbles'
+    expect(page.status_code).to eq(200)
+    within 'ul#links' do
+      expect(page).not_to have_content('Makers Academy')
+      expect(page).not_to have_content('Code.org')
+      expect(page).to have_content('This is Zombocom')
+      expect(page).to have_content('Bubble Bobble')
+    end
+  end
 end
