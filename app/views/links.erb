@@ -2,11 +2,15 @@
   <head>
   </head>
   <body>
+    <h2> Welcome <%= @username %>!</h2>
+    <!-- What is the point of the id? -->
     <ul id="links">
       <% @links.each do |link| %>
         <li>Title: <%= link.title %> </li>
         <li>URL: <%= link.url %> </li>
+        <li>tag: <%= link.tags.map(&:name).join(', ') %></li>
       <% end %>
     </ul>
+    <a href='/add'>Click here if you want to add a link</a>
   </body>
 </html>

@@ -8,8 +8,17 @@ class Bookmark < Sinatra::Base
     erb(:index)
   end
 
+  enable :sessions
+
+  post '/' do
+    session[:username] = params[:username]
+    session[:password] = params[:password]
+    redirect '/links'
+  end
+
   get '/links' do
     @links = Link.all
+    @username = session[:username]
     erb(:links)
   end
 
@@ -18,15 +27,25 @@ class Bookmark < Sinatra::Base
   end
 
   get '/tags/:name' do
-    tag = Tag.first(tags: params[:name])
+    tag = Tag.first(name: params[:name])
     @links = tag ? tag.links : []
     erb(:links)
   end
 
+  # post '/add' do
+  #   link = Link.create(url: params[:url], title: params[:title])
+  #   tag  = Tag.create(tags: params[:tags])
+  #   link.tags << tag
+  #   link.save
+  #   redirect '/links'
+  # end
+
+
   post '/add' do
     link = Link.create(url: params[:url], title: params[:title])
-    tag  = Tag.create(tags: params[:tags])
-    link.tags << tag
+    params[:tags].split(' ').each do |tag|
+      link.tags << Tag.create(name: tag)
+    end
     link.save
     redirect '/links'
   end

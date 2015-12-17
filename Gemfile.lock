@@ -78,6 +78,7 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rake (10.4.2)
     rspec-sinatra (0.1.2)
       templater (>= 1.0.0)
     sinatra (1.4.6)
@@ -102,6 +103,7 @@ DEPENDENCIES
   data_mapper
   database_cleaner
   dm-postgres-adapter
+  rake
   rspec-sinatra
   sinatra
 

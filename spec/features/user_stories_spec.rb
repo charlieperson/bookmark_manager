@@ -31,7 +31,7 @@ feature 'display a list of links' do
     click_button('Submit')
     expect(page.status_code).to eq 200
     link = Link.first
-    expect(link.tags.map(&:tags)).to include('search')
+    expect(link.tags.map(&:name)).to include('search')
   end
 
 
@@ -39,12 +39,10 @@ feature 'display a list of links' do
   # So that I can quickly find links on a particular topic
   # I would like to filter links by tag
   scenario 'I can filter links by tag' do
-      Link.create(url: 'http://www.makersacademy.com', title: 'Makers Academy', tags: [Tag.first_or_create(tags: 'education')])
-      Link.create(url: 'http://www.google.com', title: 'Google', tags: [Tag.first_or_create(tags: 'search')])
-      Link.create(url: 'http://www.zombo.com', title: 'This is Zombocom', tags: [Tag.first_or_create(tags: 'bubbles')])
-      Link.create(url: 'http://www.bubble-bobble.com', title: 'Bubble Bobble', tags: [Tag.first_or_create(tags: 'bubbles')])
-
-
+      Link.create(url: 'http://www.makersacademy.com', title: 'Makers Academy', tags: [Tag.first_or_create(name: 'education')])
+      Link.create(url: 'http://www.google.com', title: 'Google', tags: [Tag.first_or_create(name: 'search')])
+      Link.create(url: 'http://www.zombo.com', title: 'This is Zombocom', tags: [Tag.first_or_create(name: 'bubbles')])
+      Link.create(url: 'http://www.bubble-bobble.com', title: 'Bubble Bobble', tags: [Tag.first_or_create(name: 'bubbles')])
 
     visit '/tags/bubbles'
     expect(page.status_code).to eq(200)
@@ -54,5 +52,39 @@ feature 'display a list of links' do
       expect(page).to have_content('This is Zombocom')
       expect(page).to have_content('Bubble Bobble')
     end
+  end
+
+
+  # As a time-pressed user
+  # So that I can organise my links into different categories for ease of search
+  # I would like to add tags to the links in my bookmark manager
+  scenario 'add multiple tags to the one link' do
+    visit '/add'
+    fill_in(:url, with: 'charlielearnscode.com')
+    fill_in(:title, with: 'Chucks blog')
+    fill_in(:tags, with: 'blog social')
+    click_button('Submit')
+    expect(page.status_code).to eq 200
+    link = Link.first
+    expect(link.tags.map(&:name)).to include('blog')
+    expect(link.tags.map(&:name)).to include('social')
+  end
+
+  # when a user signs up, the User count increases by 1
+  scenario 'shows welcome page upon registration' do
+    visit '/'
+    fill_in(:username, with: 'charlieperson')
+    fill_in(:password, with: 'gators')
+    click_button('Submit')
+    expect(page).to have_content "Welcome charlieperson!"
+  end
+
+  # when a user signs up, the User count increases by 1
+  scenario 'shows welcome page upon registration' do
+    visit '/'
+    fill_in(:username, with: 'charlieperson')
+    fill_in(:password, with: 'gators')
+    click_button('Submit')
+    expect(page).to have_content "User Count: 1"
   end
 end
