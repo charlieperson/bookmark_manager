@@ -8,7 +8,6 @@ require 'database_cleaner'
 require 'capybara'
 require 'capybara/rspec'
 require 'rspec'
-require './lib/link'
 
 
 Capybara.app = Bookmark

@@ -2,8 +2,6 @@
   <head>
   </head>
   <body>
-    <h2> Welcome <%= @username %>!</h2>
-    <!-- What is the point of the id? -->
     <ul id="links">
       <% @links.each do |link| %>
         <li>Title: <%= link.title %> </li>

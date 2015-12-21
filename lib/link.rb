@@ -6,4 +6,5 @@ class Link
   property :user,  String
 
   has n, :tags, :through => Resource
+  # has n, :users, :through => Resource
 end
