@@ -6,7 +6,7 @@
       <% @links.each do |link| %>
         <li>Title: <%= link.title %> </li>
         <li>URL: <%= link.url %> </li>
-        <li>tag: <%= link.tags.map(&:name).join(', ') %></li>
+        <li>tags: <%= link.tags.map(&:name).join(', ') %></li>
       <% end %>
     </ul>
     <a href='/add'>Click here if you want to add a link</a>
