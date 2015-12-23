@@ -90,5 +90,18 @@ feature 'display a list of links' do
       expect(current_path).to eq('/') # current_path is a helper provided by Capybara
       expect(page).to have_content 'Password and confirmation password do not match'
     end
+
+    scenario 'require email field in order to sign up' do
+      visit '/'
+      expect{ sign_up(email: nil) }.to change(User, :count).by(0)
+    end
+
+    scenario 'require correctly formatted email' do
+      sign_up
+      sign_up
+      expect(page).to have_content "Email already registered"
+    end
+
+
   end
 end

@@ -29,10 +29,12 @@ class Bookmark < Sinatra::Base
       session[:user_id] = @user.id
       redirect to('/links')
     else
-      flash.now[:notice] = "Password and confirmation password do not match"
-      erb(:index)
+      flash[:notice] = @user.errors.full_messages.join('. ')
+      redirect '/'
     end
   end
+
+
 
   get '/links' do
     @links = Link.all
