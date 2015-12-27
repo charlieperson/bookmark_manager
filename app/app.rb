@@ -5,6 +5,7 @@ require 'sinatra/base'
 require_relative 'data_mapper_setup'
 
 class Bookmark < Sinatra::Base
+  use Rack::MethodOverride
   register Sinatra::Flash
 
   helpers do
@@ -27,14 +28,27 @@ class Bookmark < Sinatra::Base
                        password_confirmation: params[:password_confirmation])
     if @user.save
       session[:user_id] = @user.id
-      redirect to('/links')
+      redirect '/links'
     else
       flash[:notice] = @user.errors.full_messages.join('. ')
       redirect '/'
     end
   end
 
+  get '/sessions/new' do
+    erb(:login)
+  end
 
+  post '/sessions' do
+    user = User.authenticate(params[:email], params[:password])
+    if user
+      session[:user_id] = user.id
+      redirect '/links'
+    else
+      flash[:notice] = 'The email or password is incorrect'
+      redirect '/sessions/new'
+    end
+  end
 
   get '/links' do
     @links = Link.all
@@ -59,6 +73,12 @@ class Bookmark < Sinatra::Base
     @links = tag ? tag.links : []
     erb(:links)
   end
+
+delete '/sessions' do
+  session[:user_id] = nil
+  flash.keep[:notice] = 'goodbye!'
+  redirect '/'
+end
 
 
   # start the server if ruby file executed directly

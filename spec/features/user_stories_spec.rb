@@ -1,4 +1,4 @@
-require './spec/web_helper.rb'
+require './spec/helpers/web_helper.rb'
 
 # As a User
 # So that I can keep track of my bookmarks
@@ -88,7 +88,7 @@ feature 'display a list of links' do
     scenario 'with a password that does not match' do
       expect { sign_up(password_confirmation: 'wrong') }.not_to change(User, :count)
       expect(current_path).to eq('/') # current_path is a helper provided by Capybara
-      expect(page).to have_content 'Password and confirmation password do not match'
+      expect(page).to have_content 'Password does not match the confirmation'
     end
 
     scenario 'require email field in order to sign up' do
@@ -101,7 +101,22 @@ feature 'display a list of links' do
       sign_up
       expect(page).to have_content "Email already registered"
     end
+  end
 
+  scenario 'allows users to sign in' do
+    sign_up
+    visit '/'
+    click_button('Already have an account?')
+    fill_in(:email, with: 'alice@example.com')
+    fill_in(:password, with: '12345678')
+    click_button('Log in')
+    expect(page).to have_content "Welcome, alice@example.com"
+  end
 
+  scenario 'allows users to sign out' do
+    sign_up
+    click_button('log out')
+    expect(page).to have_content('goodbye!')
+    expect(page).not_to have_content('Welcome, alice@example.com')
   end
 end

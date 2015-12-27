@@ -4,10 +4,15 @@ ENV['RACK_ENV'] = 'test'
 
 require File.join(File.dirname(__FILE__), '..', '/app/app.rb')
 
+require_relative 'helpers/web_helper'
 require 'database_cleaner'
 require 'capybara'
 require 'capybara/rspec'
 require 'rspec'
+
+RSpec.configure do |config|
+  config.include SessionHelpers
+end
 
 
 Capybara.app = Bookmark
